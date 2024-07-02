@@ -13,25 +13,32 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.starbuy.di.myModules
 import com.example.starbuy.ui.features.IntroScreen
 import com.example.starbuy.ui.theme.BackgroundMain
 import com.example.starbuy.ui.theme.MainAppTheme
 import com.example.starbuy.util.KEY_CATEGORY_ARG
 import com.example.starbuy.util.KEY_PRODUCT_ARG
 import com.example.starbuy.util.MyScreens
+import dev.burnoo.cokoin.Koin
+import dev.burnoo.cokoin.navigation.KoinNavHost
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainAppTheme {
-                Surface(
-                    color = BackgroundMain,
-                    modifier = Modifier.fillMaxSize()
-                ){
-                    StarBuyUi()
+
+            Koin (appDeclaration = {modules( myModules )} ) {
+                MainAppTheme {
+                    Surface(
+                        color = BackgroundMain,
+                        modifier = Modifier.fillMaxSize()
+                    ){
+                        StarBuyUi()
+                    }
                 }
             }
+
         }
     }
 }
@@ -52,7 +59,7 @@ fun DefaultPreview() {
 @Composable
 fun StarBuyUi(){
     val navController = rememberNavController()
-    NavHost(
+    KoinNavHost(
         navController = navController,
         startDestination = MyScreens.MainScreen.route
     ) {
