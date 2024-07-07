@@ -25,6 +25,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +48,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.navigation.NavController
+import com.example.starbuy.util.MyScreens
 import dev.burnoo.cokoin.navigation.getNavController
 import dev.burnoo.cokoin.navigation.getNavViewModel
 
@@ -92,8 +95,8 @@ fun SignUpScreen() {
         ){
 
             IconApp()
-            MainCardView {
-
+            MainCardView (navigation ,viewModel){
+                viewModel.signUpUser()
             }
 
         }
@@ -119,12 +122,12 @@ fun IconApp(){
 }
 
 @Composable
-fun MainCardView( SignUpEvent: () -> Unit ){
+fun MainCardView( navigation : NavController,viewModel: SignUpViewModel ,SignUpEvent: () -> Unit ){
 
-    val name = remember { mutableStateOf("") }
-    val email = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
-    val confirmPassword = remember { mutableStateOf("") }
+    val name = viewModel.name.observeAsState("")
+    val email = viewModel.email.observeAsState("")
+    val password = viewModel.password.observeAsState("")
+    val confirmPassword = viewModel.confirmPassword.observeAsState("")
 
 
     Card (
@@ -146,10 +149,10 @@ fun MainCardView( SignUpEvent: () -> Unit ){
                 style = TextStyle(color = Blue , fontSize = 28.sp ,fontWeight = FontWeight.Bold)
             )
 
-            MainTextField(name.value ,R.drawable.ic_person ,"Your FullName"){name.value = it}
-            MainTextField(email.value ,R.drawable.ic_email ,"Email Address"){email.value = it}
-            PasswordTextField(password.value ,R.drawable.ic_password ,"Password"){password.value = it}
-            PasswordTextField(confirmPassword.value ,R.drawable.ic_password ,"Confirm Password"){confirmPassword.value = it}
+            MainTextField(name.value ,R.drawable.ic_person ,"Your FullName"){viewModel.name.value = it}
+            MainTextField(email.value ,R.drawable.ic_email ,"Email Address"){viewModel.email.value = it}
+            PasswordTextField(password.value ,R.drawable.ic_password ,"Password"){viewModel.password.value = it}
+            PasswordTextField(confirmPassword.value ,R.drawable.ic_password ,"Confirm Password"){viewModel.confirmPassword.value = it}
 
             Button(
                 onClick = SignUpEvent,
@@ -172,7 +175,13 @@ fun MainCardView( SignUpEvent: () -> Unit ){
                 Spacer(modifier = Modifier.width(8.dp))
 
                 TextButton(
-                    onClick = {}
+                    onClick = {
+                        navigation.navigate(MyScreens.SignInScreen.route){
+                            popUpTo(MyScreens.SignUpScreen.route){
+                                inclusive = true
+                            }
+                        }
+                    }
                 ) {
                   Text(text = "Log In" , color = Blue)
                 }
