@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.starbuy.di.myModules
 import com.example.starbuy.ui.features.IntroScreen
+import com.example.starbuy.ui.features.signUp.SignUpScreen
 import com.example.starbuy.ui.theme.BackgroundMain
 import com.example.starbuy.ui.theme.MainAppTheme
 import com.example.starbuy.util.KEY_CATEGORY_ARG
@@ -123,11 +124,6 @@ fun NoInternetScreen() {
 
 @Composable
 fun SignInScreen() {
-
-}
-
-@Composable
-fun SignUpScreen() {
 
 }
 
