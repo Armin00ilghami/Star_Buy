@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
@@ -21,6 +22,8 @@ import com.example.starbuy.R
 import com.example.starbuy.ui.StarBuyUi
 import com.example.starbuy.ui.theme.BackgroundMain
 import com.example.starbuy.ui.theme.MainAppTheme
+import com.example.starbuy.util.MyScreens
+import dev.burnoo.cokoin.navigation.getNavController
 
 
 @Preview(showBackground = true)
@@ -38,6 +41,7 @@ fun IntroScreenPreview() {
 
 @Composable
 fun IntroScreen() {
+    val navigation = getNavController()
     
     Image(
         modifier = Modifier.fillMaxSize(),
@@ -56,7 +60,9 @@ fun IntroScreen() {
 
         Button(
             modifier = Modifier.fillMaxWidth(0.7f),
-            onClick = {  }
+            onClick = {
+                navigation.navigate(MyScreens.SignUpScreen.route)
+            }
         ) {
 
             Text(
@@ -68,7 +74,9 @@ fun IntroScreen() {
         Button(
             modifier = Modifier.fillMaxWidth(0.7f),
             colors = ButtonDefaults.buttonColors(Color.White),
-            onClick = {  }
+            onClick = {
+                navigation.navigate(MyScreens.SignInScreen.route)
+            }
         ) {
 
             Text(

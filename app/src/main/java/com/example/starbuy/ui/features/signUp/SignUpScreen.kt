@@ -47,6 +47,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import dev.burnoo.cokoin.navigation.getNavController
+import dev.burnoo.cokoin.navigation.getNavViewModel
 
 @Preview(showBackground = true)
 @Composable
@@ -68,6 +70,9 @@ fun SignUpScreenPreview() {
 
 @Composable
 fun SignUpScreen() {
+
+    val navigation = getNavController()
+    val viewModel = getNavViewModel<SignUpViewModel>()
 
     Box {
 
