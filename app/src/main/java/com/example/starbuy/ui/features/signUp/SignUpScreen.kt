@@ -53,6 +53,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.navigation.NavController
 import com.example.starbuy.util.MyScreens
+import com.example.starbuy.util.NetworkChecker
 import dev.burnoo.cokoin.navigation.getNavController
 import dev.burnoo.cokoin.navigation.getNavViewModel
 import java.util.regex.Pattern
@@ -170,7 +171,11 @@ fun MainCardView( navigation : NavController,viewModel: SignUpViewModel ,SignUpE
                               if (password.value == confirmPassword.value){
                                   if (password.value.length >= 8){
                                       if (Patterns.EMAIL_ADDRESS.matcher(email.value).matches()){
-                                          SignUpEvent.invoke()
+                                          if (NetworkChecker(context).isInternetConnected){
+                                              SignUpEvent.invoke()
+                                          }else{
+                                              Toast.makeText(context,"Internet Not Connected!", Toast.LENGTH_LONG).show()
+                                          }
                                       }else{
                                           Toast.makeText(context,"Email Format Wrong!", Toast.LENGTH_LONG).show()
                                       }

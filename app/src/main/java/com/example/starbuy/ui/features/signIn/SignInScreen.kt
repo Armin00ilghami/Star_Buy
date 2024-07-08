@@ -50,6 +50,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.navigation.NavController
 import com.example.starbuy.util.MyScreens
+import com.example.starbuy.util.NetworkChecker
 import dev.burnoo.cokoin.navigation.getNavController
 import dev.burnoo.cokoin.navigation.getNavViewModel
 
@@ -151,18 +152,22 @@ fun MainCardView(navigation : NavController, viewModel: SignInViewModel, SignInE
 
             Button(
                 onClick = {
+
                     if (email.value.isNotEmpty() &&
                         password.value.isNotEmpty() ){
 
                         if (Patterns.EMAIL_ADDRESS.matcher(email.value).matches()){
-                            SignInEvent.invoke()
+                            if (NetworkChecker(context).isInternetConnected){
+                                SignInEvent.invoke()
+                            }else{
+                                Toast.makeText(context,"Internet Not Connected!", Toast.LENGTH_LONG).show()
+                            }
                         }else{
                             Toast.makeText(context,"Email Format Wrong!", Toast.LENGTH_LONG).show()
                         }
                     }else{
                         Toast.makeText(context,"Please fill data complete", Toast.LENGTH_LONG).show()
                     }
-
 
                 },
                 modifier = Modifier.padding(top = 28.dp , bottom = 8.dp)
