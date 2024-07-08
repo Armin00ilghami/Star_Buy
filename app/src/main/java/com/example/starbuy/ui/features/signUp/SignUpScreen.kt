@@ -1,5 +1,7 @@
 package com.example.starbuy.ui.features.signUp
 
+import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,6 +47,7 @@ import com.example.starbuy.ui.theme.MainAppTheme
 import com.example.starbuy.ui.theme.Shapes
 import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -52,6 +55,7 @@ import androidx.navigation.NavController
 import com.example.starbuy.util.MyScreens
 import dev.burnoo.cokoin.navigation.getNavController
 import dev.burnoo.cokoin.navigation.getNavViewModel
+import java.util.regex.Pattern
 
 @Preview(showBackground = true)
 @Composable
@@ -128,6 +132,7 @@ fun MainCardView( navigation : NavController,viewModel: SignUpViewModel ,SignUpE
     val email = viewModel.email.observeAsState("")
     val password = viewModel.password.observeAsState("")
     val confirmPassword = viewModel.confirmPassword.observeAsState("")
+    val context = LocalContext.current
 
 
     Card (
@@ -155,7 +160,30 @@ fun MainCardView( navigation : NavController,viewModel: SignUpViewModel ,SignUpE
             PasswordTextField(confirmPassword.value ,R.drawable.ic_password ,"Confirm Password"){viewModel.confirmPassword.value = it}
 
             Button(
-                onClick = SignUpEvent,
+                onClick = {
+
+                          if (name.value.isNotEmpty() &&
+                              email.value.isNotEmpty() &&
+                              password.value.isNotEmpty() &&
+                              confirmPassword.value.isNotEmpty()){
+
+                              if (password.value == confirmPassword.value){
+                                  if (password.value.length >= 8){
+                                      if (Patterns.EMAIL_ADDRESS.matcher(email.value).matches()){
+                                          SignUpEvent.invoke()
+                                      }else{
+                                          Toast.makeText(context,"Email Format Wrong!", Toast.LENGTH_LONG).show()
+                                      }
+                                  }else{
+                                      Toast.makeText(context,"Character Should Be More Than 8 !", Toast.LENGTH_LONG).show()
+                                  }
+                              }else{
+                                  Toast.makeText(context,"Password and Confirm are not same!", Toast.LENGTH_SHORT).show()
+                              }
+                          }else{
+                              Toast.makeText(context,"Please fill data complete", Toast.LENGTH_LONG).show()
+                          }
+                },
                 modifier = Modifier.padding(top = 28.dp , bottom = 8.dp)
             ) {
                 Text(

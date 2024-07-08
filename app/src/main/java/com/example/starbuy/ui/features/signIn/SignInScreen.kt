@@ -1,5 +1,7 @@
 package com.example.starbuy.ui.features.signIn
 
+import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -42,6 +44,7 @@ import com.example.starbuy.ui.theme.MainAppTheme
 import com.example.starbuy.ui.theme.Shapes
 import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -121,6 +124,7 @@ fun MainCardView(navigation : NavController, viewModel: SignInViewModel, SignInE
 
     val email = viewModel.email.observeAsState("")
     val password = viewModel.password.observeAsState("")
+    val context = LocalContext.current
 
 
     Card (
@@ -146,7 +150,21 @@ fun MainCardView(navigation : NavController, viewModel: SignInViewModel, SignInE
             PasswordTextField(password.value ,R.drawable.ic_password ,"Password"){viewModel.password.value = it}
 
             Button(
-                onClick = SignInEvent,
+                onClick = {
+                    if (email.value.isNotEmpty() &&
+                        password.value.isNotEmpty() ){
+
+                        if (Patterns.EMAIL_ADDRESS.matcher(email.value).matches()){
+                            SignInEvent.invoke()
+                        }else{
+                            Toast.makeText(context,"Email Format Wrong!", Toast.LENGTH_LONG).show()
+                        }
+                    }else{
+                        Toast.makeText(context,"Please fill data complete", Toast.LENGTH_LONG).show()
+                    }
+
+
+                },
                 modifier = Modifier.padding(top = 28.dp , bottom = 8.dp)
             ) {
                 Text(
