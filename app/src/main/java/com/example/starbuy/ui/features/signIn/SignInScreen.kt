@@ -27,6 +27,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
@@ -51,6 +52,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.navigation.NavController
 import com.example.starbuy.util.MyScreens
 import com.example.starbuy.util.NetworkChecker
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dev.burnoo.cokoin.navigation.getNavController
 import dev.burnoo.cokoin.navigation.getNavViewModel
 
@@ -72,6 +74,11 @@ fun SignInScreenPreview() {
 
 @Composable
 fun SignInScreen() {
+
+    val uiController = rememberSystemUiController()
+    SideEffect {
+        uiController.setStatusBarColor(Blue)
+    }
 
     val navigation = getNavController()
     val viewModel = getNavViewModel<SignInViewModel>()

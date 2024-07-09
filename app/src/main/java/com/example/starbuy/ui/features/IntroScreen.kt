@@ -12,6 +12,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,8 +22,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.starbuy.R
 import com.example.starbuy.ui.StarBuyUi
 import com.example.starbuy.ui.theme.BackgroundMain
+import com.example.starbuy.ui.theme.Blue
 import com.example.starbuy.ui.theme.MainAppTheme
 import com.example.starbuy.util.MyScreens
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dev.burnoo.cokoin.navigation.getNavController
 
 
@@ -41,6 +44,11 @@ fun IntroScreenPreview() {
 
 @Composable
 fun IntroScreen() {
+    val uiController = rememberSystemUiController()
+    SideEffect {
+        uiController.setStatusBarColor(Blue)
+    }
+
     val navigation = getNavController()
     
     Image(
