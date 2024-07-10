@@ -60,7 +60,7 @@ class UserRepositoryImpl(
         sharedPref.edit().clear().apply()
     }
 
-    //load token in sharePref into catch
+    //load token in sharePref into cache
     override fun loadToken() {
         TokenInMemory.refreshToken(getUserName(), getToken())
     }

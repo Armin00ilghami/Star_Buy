@@ -24,13 +24,17 @@ import com.example.starbuy.util.KEY_PRODUCT_ARG
 import com.example.starbuy.util.MyScreens
 import dev.burnoo.cokoin.Koin
 import dev.burnoo.cokoin.navigation.KoinNavHost
+import org.koin.android.ext.koin.androidContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
 
-            Koin (appDeclaration = {modules( myModules )} ) {
+            Koin (appDeclaration = {
+                androidContext(this@MainActivity)
+                modules( myModules )
+            } ) {
                 MainAppTheme {
                     Surface(
                         color = BackgroundMain,
