@@ -52,6 +52,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.navigation.NavController
 import com.example.starbuy.util.MyScreens
 import com.example.starbuy.util.NetworkChecker
+import com.example.starbuy.util.VALUE_SUCCESS
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dev.burnoo.cokoin.navigation.getNavController
 import dev.burnoo.cokoin.navigation.getNavViewModel
@@ -80,6 +81,7 @@ fun SignInScreen() {
         uiController.setStatusBarColor(Blue)
     }
 
+    val context = LocalContext.current
     val navigation = getNavController()
     val viewModel = getNavViewModel<SignInViewModel>()
 
@@ -102,7 +104,21 @@ fun SignInScreen() {
 
             IconApp()
             MainCardView (navigation ,viewModel){
-                viewModel.signInUser()
+                viewModel.signInUser{
+
+                    if (it == VALUE_SUCCESS){
+
+                        navigation.navigate(MyScreens.MainScreen.route){
+                            popUpTo(MyScreens.IntroScreen.route){
+                                inclusive = true
+                            }
+                        }
+
+                    }else{
+                        Toast.makeText(context,it, Toast.LENGTH_SHORT).show()
+                    }
+
+                }
             }
 
         }

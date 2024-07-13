@@ -14,6 +14,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.starbuy.di.myModules
+import com.example.starbuy.model.repository.TokenInMemory
+import com.example.starbuy.model.repository.user.UserRepository
 import com.example.starbuy.ui.features.IntroScreen
 import com.example.starbuy.ui.features.signIn.SignInScreen
 import com.example.starbuy.ui.features.signUp.SignUpScreen
@@ -23,6 +25,7 @@ import com.example.starbuy.util.KEY_CATEGORY_ARG
 import com.example.starbuy.util.KEY_PRODUCT_ARG
 import com.example.starbuy.util.MyScreens
 import dev.burnoo.cokoin.Koin
+import dev.burnoo.cokoin.get
 import dev.burnoo.cokoin.navigation.KoinNavHost
 import org.koin.android.ext.koin.androidContext
 
@@ -40,6 +43,10 @@ class MainActivity : ComponentActivity() {
                         color = BackgroundMain,
                         modifier = Modifier.fillMaxSize()
                     ){
+                        //check token in SharedPref before ui run
+                        val userRepository : UserRepository = get()
+                        userRepository.loadToken()
+
                         StarBuyUi()
                     }
                 }
@@ -71,7 +78,11 @@ fun StarBuyUi(){
     ) {
 
         composable( MyScreens.MainScreen.route ){
-            MainScreen()
+            if(TokenInMemory.token != null || TokenInMemory.token != "") {
+                MainScreen()
+            } else {
+                IntroScreen()
+            }
         }
 
         composable(
