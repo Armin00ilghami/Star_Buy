@@ -32,8 +32,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -41,7 +39,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starbuy.R
-import com.example.starbuy.ui.features.IntroScreen
 import com.example.starbuy.ui.theme.BackgroundMain
 import com.example.starbuy.ui.theme.Blue
 import com.example.starbuy.ui.theme.MainAppTheme
@@ -59,7 +56,6 @@ import com.example.starbuy.util.VALUE_SUCCESS
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dev.burnoo.cokoin.navigation.getNavController
 import dev.burnoo.cokoin.navigation.getNavViewModel
-import java.util.regex.Pattern
 
 @Preview(showBackground = true)
 @Composable
@@ -71,8 +67,6 @@ fun SignUpScreenPreview() {
             color = BackgroundMain,
             modifier = Modifier.fillMaxSize()
         ) {
-            //IntroScreen()
-            //MainCardView(){}
             SignUpScreen()
         }
     }
