@@ -1,6 +1,8 @@
 package com.example.starbuy.model.net
 
+import com.example.starbuy.model.data.AdsResponse
 import com.example.starbuy.model.data.LoginResponse
+import com.example.starbuy.model.data.ProductResponse
 import com.example.starbuy.model.repository.TokenInMemory
 import com.example.starbuy.util.BASE_URL
 import com.google.gson.JsonObject
@@ -21,6 +23,12 @@ interface ApiService {
 
     @GET("refreshToken")
     fun refreshToken():Call<LoginResponse>
+
+    @GET("getProducts")
+    suspend fun getAllProducts() :ProductResponse
+
+    @GET("getSliderPics")
+    suspend fun getAllAds() :AdsResponse
 
 }
 
