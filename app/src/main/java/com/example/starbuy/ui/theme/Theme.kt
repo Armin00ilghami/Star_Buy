@@ -72,6 +72,7 @@ fun MainAppTheme(
         content = content
     )
 
+    //trick to change and set color for status bar in compose
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(Color.White)
 

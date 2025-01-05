@@ -1,5 +1,6 @@
 package com.example.starbuy.ui.features.main
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,6 +22,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -40,10 +43,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starbuy.R
 import com.example.starbuy.ui.theme.BackgroundMain
+import com.example.starbuy.ui.theme.Blue
 import com.example.starbuy.ui.theme.CardViewBackground
 import com.example.starbuy.ui.theme.MainAppTheme
 import com.example.starbuy.ui.theme.Shapes
+import com.example.starbuy.util.CATEGORY
+import com.example.starbuy.util.NetworkChecker
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import dev.burnoo.cokoin.navigation.getNavViewModel
+import org.koin.core.parameter.parametersOf
 
 @Preview(showBackground = true)
 @Composable
@@ -60,32 +68,38 @@ fun MainScreenPreview(){
 
 }
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun MainScreen(){
+
+    val context = LocalContext.current
 
     val uiController = rememberSystemUiController()
     SideEffect {
         uiController.setStatusBarColor(Color.White)
     }
 
-    Column (
+    val viewModel =  getNavViewModel<MainViewModel>( parameters = {
+        parametersOf(NetworkChecker(context).isInternetConnected)
+    })
+
+        Column (
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(bottom = 16.dp)
     ){
 
-        TopToolbar()
+            if (viewModel.showProgressBar.value) {
+                LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = Blue
+                )
+            }
 
-        CategoryBar()
+            TopToolbar()
 
-        ProductSubject()
-        ProductSubject()
-
-        BigPictureAdvertise()
-
-        ProductSubject()
-        ProductSubject()
+            CategoryBar(CATEGORY)
 
     }
 
@@ -118,15 +132,15 @@ fun TopToolbar() {
 }
 //__________________________________________________________
 @Composable
-fun CategoryBar() {
+fun CategoryBar(categoryList: List<Pair<String, Int>>) {
 
     LazyRow (
         modifier = Modifier.padding(top = 16.dp),
         contentPadding = PaddingValues(end = 16.dp)
     ){
 
-        items (10){
-            CategoryItem()
+        items (categoryList.size){
+            CategoryItem(categoryList[it])
         }
 
     }
@@ -134,7 +148,7 @@ fun CategoryBar() {
 }
 
 @Composable
-fun CategoryItem(){
+fun CategoryItem(subject :Pair<String,Int>){
     Column (
         modifier = Modifier
             .padding(start = 16.dp)
@@ -148,12 +162,12 @@ fun CategoryItem(){
         ) {
             Image(
                 modifier = Modifier.padding(16.dp),
-                painter = painterResource(id = R.drawable.ic_icon_app),
+                painter = painterResource(id = subject.second),
                 contentDescription = null
             )
         }
         Text(
-            text = "hotel",
+            text = subject.first,
             modifier = Modifier.padding(top = 4.dp),
             style = TextStyle(color = Color.Gray)
         )
@@ -244,9 +258,9 @@ fun BigPictureAdvertise() {
         modifier = Modifier
             .fillMaxWidth()
             .height(260.dp)
-            .padding(top = 32.dp , start = 16.dp , end = 16.dp)
+            .padding(top = 32.dp, start = 16.dp, end = 16.dp)
             .clip(Shapes.medium)
-            .clickable {  },
+            .clickable { },
         painter = painterResource(id = R.drawable.img_intro),
         contentDescription = null,
         contentScale = ContentScale.Crop

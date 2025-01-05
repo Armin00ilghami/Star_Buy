@@ -16,4 +16,4 @@ val CardViewBackground = Color(9, 121, 223, 8)
 val PriceBackground = Color(9, 121, 223, 23)
 val Blue = Color(9, 121, 223)
 
-// Text Color -> white , black , darkGray
+// Text Color -> white , black , darkGray (system have them)
