@@ -1,6 +1,7 @@
 package com.example.starbuy.ui.features.main
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,7 +42,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.starbuy.R
+import com.example.starbuy.model.data.Ads
+import com.example.starbuy.model.data.Product
 import com.example.starbuy.ui.theme.BackgroundMain
 import com.example.starbuy.ui.theme.Blue
 import com.example.starbuy.ui.theme.CardViewBackground
@@ -49,6 +53,7 @@ import com.example.starbuy.ui.theme.MainAppTheme
 import com.example.starbuy.ui.theme.Shapes
 import com.example.starbuy.util.CATEGORY
 import com.example.starbuy.util.NetworkChecker
+import com.example.starbuy.util.TAGS
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dev.burnoo.cokoin.navigation.getNavViewModel
 import org.koin.core.parameter.parametersOf
@@ -98,9 +103,41 @@ fun MainScreen(){
             }
 
             TopToolbar()
-
             CategoryBar(CATEGORY)
 
+            val productDataState = viewModel.dataProducts
+            val adsDataState = viewModel.dataAds
+            ProductSubjectList( TAGS , productDataState.value , adsDataState.value )
+
+    }
+
+}
+
+//__________________________________________________________
+
+@Composable
+fun ProductSubjectList(tags: List<String>, products: List<Product>, ads: List<Ads>) {
+
+    val context = LocalContext.current
+
+    if (products.isEmpty()){
+        //even we can add animation with Lottie
+        Toast.makeText(context , "Please Connect Internet" ,Toast.LENGTH_SHORT).show()
+    }else {
+
+        Column {
+            tags.forEachIndexed { it, _ ->
+
+                val withTagData = products.filter { product -> product.tags == tags[it] }
+                //shuffled use for make random index of product
+                ProductSubject(tags[it], withTagData.shuffled())
+
+                if (ads.size >= 2)
+                    if (it == 1 || it == 2)
+                        BigPictureAdvertise( ads[it] )
+
+            }
+        }
     }
 
 }
@@ -176,39 +213,39 @@ fun CategoryItem(subject :Pair<String,Int>){
 }
 //__________________________________________________________
 @Composable
-fun ProductSubject() {
+fun ProductSubject(subject : String , data : List<Product>) {
 
     Column (
         modifier = Modifier.padding(top = 32.dp)
     ){
         Text(
-            text = "Popular Destinations",
+            text = subject,
             modifier = Modifier.padding(start = 16.dp),
             style = MaterialTheme.typography.headlineSmall //.h6
         )
 
-        ProductBar()
+        ProductBar(data)
 
     }
 
 }
 
 @Composable
-fun ProductBar() {
+fun ProductBar( data : List<Product>) {
 
     LazyRow (
         modifier = Modifier.padding(top = 16.dp),
         contentPadding = PaddingValues(end = 16.dp)
     ){
-        items(10){
-            ProductItem()
+        items(data.size){
+            ProductItem(data[it])
         }
     }
 
 }
 
 @Composable
-fun ProductItem() {
+fun ProductItem(product :Product) {
 
     Card(
         modifier = Modifier
@@ -217,51 +254,54 @@ fun ProductItem() {
         elevation = CardDefaults.cardElevation(4.dp),
         shape = Shapes.medium
     ) {
-        Image(
-            modifier = Modifier.size(200.dp),
-            contentScale = ContentScale.Crop,
-            painter = painterResource(id = R.drawable.img_intro),
-            contentDescription = null
-        )
 
-        Column (
-            modifier = Modifier.padding(10.dp)
-        ){
+        Column {
 
-            Text(
-                text = "Product 1",
-                style = TextStyle(fontSize = 15.sp , fontWeight = FontWeight.Medium)
+            AsyncImage(
+                modifier = Modifier.size(200.dp),
+                contentScale = ContentScale.Crop,
+                model = product.imgUrl,
+                contentDescription = null
             )
 
-            Text(
-                modifier = Modifier.padding(top = 4.dp),
-                text = "1mil Toman",
-                style = TextStyle(fontSize = 14.sp)
-            )
+            Column (
+                modifier = Modifier.padding(10.dp)
+            ){
 
-            Text(
-                text = "+500 sold",
-                style = TextStyle(color = Color.Gray , fontSize = 13.sp)
-            )
+                Text(
+                    text = product.name ,
+                    style = TextStyle(fontSize = 15.sp , fontWeight = FontWeight.Medium)
+                )
 
+                Text(
+                    modifier = Modifier.padding(top = 4.dp),
+                    text = product.price + " Tomans" ,
+                    style = TextStyle(fontSize = 14.sp)
+                )
+
+                Text(
+                    text = product.soldItem + " Sold",
+                    style = TextStyle(color = Color.Gray , fontSize = 13.sp)
+                )
+
+            }
         }
-
     }
 
 }
 
 //__________________________________________________________
 @Composable
-fun BigPictureAdvertise() {
+fun BigPictureAdvertise(ads :Ads) {
 
-    Image(
+    AsyncImage(
         modifier = Modifier
             .fillMaxWidth()
             .height(260.dp)
             .padding(top = 32.dp, start = 16.dp, end = 16.dp)
             .clip(Shapes.medium)
             .clickable { },
-        painter = painterResource(id = R.drawable.img_intro),
+        model = ads.imageURL,
         contentDescription = null,
         contentScale = ContentScale.Crop
     )
